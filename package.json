@@ -1,0 +1,48 @@
+{
+  "name": "express-bem",
+  "version": "0.0.1",
+  "description": "bem bundles renderer for express",
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "jshint lib test && jscs lib test",
+    "test": "npm run lint && mocha",
+    "changelog": "git log `git describe --tags --abbrev=0`..HEAD --pretty=format:' * %s (%an)' | grep -v 'Merge pull request'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zxqfox/express-bem.git"
+  },
+  "keywords": [
+    "express",
+    "bem",
+    "bemhtml",
+    "bemtree",
+    "extension",
+    "render",
+    "adapter"
+  ],
+  "author": "Alexej Yaroshevich <zxqfox@gmail.com> (http://github.com/zxqfox)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zxqfox/express-bem/issues"
+  },
+  "homepage": "https://github.com/zxqfox/express-bem",
+  "dependencies": {
+    "vow": "^0.4.5"
+  },
+  "peerDependencies": {
+    "express": ">= 3.0.x"
+  },
+  "devDependencies": {
+    "express": "4.8.x",
+    "bem": "^0.8.1",
+    "jscs": "^1.5.8",
+    "jshint": "^2.5.2",
+    "mocha": ">=1.20.1",
+    "request": "^2.37.0"
+  },
+  "files": [
+    "lib",
+    "LICENSE"
+  ]
+}

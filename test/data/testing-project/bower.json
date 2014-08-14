@@ -1,0 +1,14 @@
+{
+  "author": "Alexej Yaroshevich",
+  "name": "testing",
+  "email": "alex@qfox.ru",
+  "version": "0.0.0",
+  "ignore": [
+    ".bem/cache",
+    "node_modules",
+    "libs"
+  ],
+  "dependencies": {
+    "bem-core": "v2.3.0"
+  }
+}
