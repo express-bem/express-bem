@@ -3,9 +3,11 @@ var EXPRESS = require('express'),
     REQUEST = require('request'),
 
     EXPRESSBEM = require('.'),
-    md5 = EXPRESSBEM.util.md5;
+    VM = require('vm'),
+    U = require('../lib/util');
 
 global.expressSetup = expressSetup;
+global.loadBemjson = loadBemjson;
 
 function expressSetup (opts) {
 	var env = {};
@@ -13,22 +15,17 @@ function expressSetup (opts) {
     before(function () {
         env.app = EXPRESS();
 
-        // its like three in one:
-        // EXPRESSBEM.patchView(require('express/lib/view'), 'test/data/views/desktop.bundles');
-        // app.engine('bemhtml.js', EXPRESSBEM.bemhtmlEngine());
-        // app.engine('bemtree.js', EXPRESSBEM.bemtreeEngine());
-        // app.set('view engine', 'bemtree.js');
-        EXPRESSBEM(env.app, opts);
+        env.app.bem = EXPRESSBEM(opts).bindTo(env.app);
 
-        env.app.server = env.app.listen(function () {
+        env.server = env.app.listen(function () {
             // store port to send requests later
-            env.port = env.app.server.address().port;
+            env.port = env.server.address().port;
         });
     });
 
     // stop listening after tests
     after(function () {
-        env.app.server.close();
+        env.server.close();
     });
 
     env.case = function (title, route, assert) {
@@ -37,11 +34,32 @@ function expressSetup (opts) {
     };
 
 	function urlPath (title) {
-	    return '/' + md5(title);
+	    return '/' + U.md5(title);
 	}
 	function url (title) {
 	    return 'http://localhost:' + env.port + urlPath(title);
 	}
 
 	return env;
+}
+
+function loadBemjson (file, cb) {
+    U.load(file, function (err, data) {
+        if (err) {
+            cb(err);
+            return;
+        }
+
+        var sandbox = {},
+            script = 'bemjson = ' + data;
+
+        try {
+            VM.runInNewContext(script, sandbox, file + '.vm');
+        } catch (e) {
+            cb(e);
+            return;
+        }
+
+        cb(null, sandbox.bemjson);
+    });
 }

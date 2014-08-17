@@ -11,6 +11,13 @@ A [bemhtml.js][] and [bemtree.js][] (by default) view engine for [Express][] :pa
 [bemtree.js]: https://github.com/bem/bem-core
 [status]: https://david-dm.org/zxqfox/express-bem
 
+Why
+---
+
+Because laziness and short memory. And because simple solutions rocks.
+
+And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks library in any app.
+
 Dependencies
 ------------
 
@@ -33,32 +40,38 @@ To _load_ and _init_ module you can use this snippet:
 ```js
 var
   Express = require('express'),
-  ExpressView = require('express/lib/view'), // we need it here to patch it
-  ExpressBEM = require('express-bem');
+  ExpressBem = require('express-bem'),
 
-// somewhere you should create or express app
-app = Express();
+  // create app and bem
+  app = Express(),
+  bem = ExpressBem({
+    projectRoot: '.',          // bem project root, used for bem make only
+    path: './desktop.bundles', // path to your bundles
+    cache: false               // to reload files each render
+    cache: { make: false }     // to rebuild and reload files each render
+  });
+
+// and just use _all-in-one_
+app.bem = bem.bindTo(app);
+```
+
+Or detailed (see also `ExpressBem.prototype.bindTo` method)
+
+```js
+app.bem = bem;
+
+// register engines
+app.engine('bemhtml.js', bem.expressViewEngine);
+app.engine('bemtree.js', bem.expressViewEngine);
+app.engine('bem', bem.expressViewEngine);
+app.set('view engine', 'bem');
 
 // here to lookup bundles at your path you need small patch
-ExpressBEM.patchView(ExpressView, 'path-to-your/desktop.bundles');
-// create and register engines
-app.engine('bemhtml.js', ExpressBem.bemhtmlEngine());
-app.engine('bemtree.js', ExpressBem.bemtreeEngine());
-app.set('view engine', 'bemtree.js');
-```
+bem.patchView(app.get('view'));
 
-Or just use _all-in-one_
-
-```js
-require('express-bem')(app, {
-  path: 'path-to-your/desktop.bundles'
-});
-```
-
-Or just use adapter with express' default views path
-
-```js
-app.engine('bemhtml.js', require('express-bem').engine());
+if ('needAutoMake') {
+  bem.use(bem.makeMiddleware({ verbosity: 'debug' }));
+}
 ```
 
 And then just use `res.render` (or `app.render`) in your code and pass
@@ -73,6 +86,16 @@ app.get('/', function (req, res) {
         'Hello!'
       ]
     }
+  }
+});
+```
+
+Or raw data to execute `bemtree`
+
+```js
+app.get('/', function (req, res) {
+  res.render('your-bundle', {
+    param: 1
   }
 });
 ```

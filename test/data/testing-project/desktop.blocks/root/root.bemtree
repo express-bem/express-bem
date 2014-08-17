@@ -1,0 +1,17 @@
+block('root').def()(function() {
+
+    this.ctx = {
+        block: 'page',
+        title: this.ctx.title,
+        head: [
+            { elem: 'css', url: this.ctx.css, ie: false },
+            { elem: 'js', url: this.ctx.js }
+        ],
+        content: {
+            'testing'
+        }
+    };
+
+    return applyNext();
+
+});

@@ -1,6 +1,6 @@
 {
   "name": "express-bem",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "bem bundles renderer for express",
   "main": "lib/index.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "bem",
     "bemhtml",
     "bemtree",
+    "dev",
     "extension",
     "render",
     "adapter"
@@ -28,14 +29,15 @@
   },
   "homepage": "https://github.com/zxqfox/express-bem",
   "dependencies": {
+    "lodash.assign": "^2.4.1",
     "vow": "^0.4.5"
   },
   "peerDependencies": {
     "express": ">= 3.0.x"
   },
   "devDependencies": {
+    "bem": "^0.9.0",
     "express": "4.8.x",
-    "bem": "^0.8.1",
     "jscs": "^1.5.8",
     "jshint": "^2.5.2",
     "mocha": ">=1.20.1",

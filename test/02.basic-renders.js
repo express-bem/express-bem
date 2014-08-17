@@ -1,15 +1,14 @@
-var ASSERT = require('assert'),
+var ASSERT = require('assert');
 
-    U = require('.').util,
-    loadBemjson = U.loadBemjson;
-
-describe('basic middlewares', function () {
-    var env = global.expressSetup({ path : 'test/data/views/desktop.bundles' });
+describe('basic renders', function () {
+    var env = global.expressSetup({
+        path : 'test/data/views/desktop.bundles'
+    });
 
     it('should generate html page with bemhtml', function (done) {
 
         env.case(this.test.title, function (req, res) {
-            loadBemjson('./test/data/views/desktop.bundles/index/index.bemjson.js', function (err, bemjson) {
+            global.loadBemjson('./test/data/views/desktop.bundles/index/index.bemjson.js', function (err, bemjson) {
                 res.render('index', { bemjson : bemjson });
             });
 
