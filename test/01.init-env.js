@@ -1,6 +1,6 @@
 
 var ASSERT = require('assert'),
-    EXPRESSBEM = require('.');
+    EXPRESSBEM = require('..');
 
 describe('init-env', function () {
 

@@ -2,7 +2,7 @@
 var EXPRESS = require('express'),
     REQUEST = require('request'),
 
-    EXPRESSBEM = require('.'),
+    EXPRESSBEM = require('..'),
     VM = require('vm'),
     U = require('../lib/util');
 
@@ -10,7 +10,7 @@ global.expressSetup = expressSetup;
 global.loadBemjson = loadBemjson;
 
 function expressSetup (opts) {
-	var env = {};
+    var env = {};
 
     before(function () {
         env.app = EXPRESS();
@@ -29,18 +29,18 @@ function expressSetup (opts) {
     });
 
     env.case = function (title, route, assert) {
-    	env.app.get(urlPath(title), route);
-    	REQUEST(url(title), assert);
+        env.app.get(urlPath(title), route);
+        REQUEST(url(title), assert);
     };
 
-	function urlPath (title) {
-	    return '/' + U.md5(title);
-	}
-	function url (title) {
-	    return 'http://localhost:' + env.port + urlPath(title);
-	}
+    function urlPath (title) {
+        return '/' + U.md5(title);
+    }
+    function url (title) {
+        return 'http://localhost:' + env.port + urlPath(title);
+    }
 
-	return env;
+    return env;
 }
 
 function loadBemjson (file, cb) {
