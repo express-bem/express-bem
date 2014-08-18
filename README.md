@@ -1,29 +1,30 @@
 
-bemhtml.js and bemtree.js express view engines
-==============================================
+# bem bundles renderer for [express][] [![Build Status](https://travis-ci.org/zxqfox/express-bem.svg)](https://travis-ci.org/zxqfox/express-bem) [![GitHub Release](http://img.shields.io/github/release/zxqfox/express-bem.svg)](https://github.com/zxqfox/express-bem/releases) [![Dependency Status](https://david-dm.org/zxqfox/express-bem.png)](https://david-dm.org/zxqfox/express-bem)
 
-A [bemhtml.js][] and [bemtree.js][] (by default) view engine for [Express][] :palm_tree:
+A [bemhtml.js][] and [bemtree.js][], etc. adapters for [express][] :palm_tree:
 
-[![Dependency Status](https://david-dm.org/zxqfox/express-bem.png)][status]
+[express]: https://github.com/visionmedia/express
 
-[Express]: https://github.com/visionmedia/express
-[bemhtml.js]: https://github.com/bem/bem-core
-[bemtree.js]: https://github.com/bem/bem-core
-[status]: https://david-dm.org/zxqfox/express-bem
-
-Why
----
+## Why
 
 Because laziness and short memory. And because simple solutions rocks.
 
 And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks library in any app.
 
-Dependencies
-------------
+## Plugins
+
+```
+// - [express-bem-bemhtml](https://github.com/zxqfox/express-bem-bemhtml)
+// - [express-bem-bemtree](https://github.com/zxqfox/express-bem-bemtree)
+```
+
+- [express-bem-tools-make](https://github.com/zxqfox/express-bem-tools-make)
+
+## Dependencies
 
 ### Peer
 
-[Express][] v3.0+
+[express][] v3.0+
 
 Installation
 ------------
@@ -48,7 +49,6 @@ var
     projectRoot: '.',          // bem project root, used for bem make only
     path: './desktop.bundles', // path to your bundles
     cache: false               // to reload files each render
-    cache: { make: false }     // to rebuild and reload files each render
   });
 
 // and just use _all-in-one_
@@ -69,9 +69,9 @@ app.set('view engine', 'bem');
 // here to lookup bundles at your path you need small patch
 bem.patchView(app.get('view'));
 
-if ('needAutoMake') {
-  bem.use(bem.makeMiddleware({ verbosity: 'debug' }));
-}
+//if ('needAutoMake') { moved out to separate repo
+//  bem.use(bem.makeMiddleware({ verbosity: 'debug' }));
+//}
 ```
 
 And then just use `res.render` (or `app.render`) in your code and pass
