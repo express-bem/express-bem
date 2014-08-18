@@ -27,7 +27,7 @@ describe('view render middlewares', function () {
 
         env.case(this.test.title, function (req, res) {
             global.loadBemjson('./test/data/views/desktop.bundles/index/index.bemjson.js', function (err, bemjson) {
-                res.render('index', { bemjson : bemjson });
+                res.render('index', {bemjson : bemjson});
             });
 
         }, function (error, response, body) {
