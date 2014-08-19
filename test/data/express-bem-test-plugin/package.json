@@ -1,0 +1,8 @@
+{
+  "name": "express-bem-test-plugin",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Alexej Yaroshevich <zxqfox@gmail.com> (http://github.com/zxqfox)",
+  "license": "MIT"
+}

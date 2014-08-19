@@ -1,4 +1,6 @@
 var ASSERT = require('assert');
+var FS = require('fs');
+var PATH = require('path');
 
 describe('plugins', function () {
     var testingPattern = String(Math.random() * 10e15);
@@ -41,6 +43,42 @@ describe('plugins', function () {
                 done();
             });
         });
+    });
+
+    describe('loading by string', function () {
+        before(function (next) {
+            FS.symlink(PATH.resolve('./test/data/express-bem-test-plugin'),
+                './node_modules/express-bem-test-plugin', function (err) {
+                    next();
+                });
+        });
+
+        it('should load by full module name', function (done) {
+            var app, bem;
+            app = global.EXPRESS();
+            bem = global.EXPRESSBEM({root : 'test/data/views'}).bindTo(app);
+            bem.usePlugin('express-bem-test-plugin');
+
+            app.render('index', {t: testingPattern}, function (err, body) {
+                ASSERT(!err, err);
+                ASSERT.equal(body.t, testingPattern);
+                done();
+            });
+        });
+
+        it('should load by path', function (done) {
+            var app, bem;
+            app = global.EXPRESS();
+            bem = global.EXPRESSBEM({root : 'test/data/views'}).bindTo(app);
+            bem.usePlugin(PATH.resolve('./test/data/express-bem-test-plugin'));
+
+            app.render('index', {t: testingPattern}, function (err, body) {
+                ASSERT(!err, err);
+                ASSERT.equal(body.t, testingPattern);
+                done();
+            });
+        });
+
     });
 
     // simple engine
