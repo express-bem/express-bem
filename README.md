@@ -1,9 +1,10 @@
 
-# bem bundles renderer for [express][] [![Build Status](https://travis-ci.org/zxqfox/express-bem.svg)](https://travis-ci.org/zxqfox/express-bem) [![GitHub Release](http://img.shields.io/github/release/zxqfox/express-bem.svg)](https://github.com/zxqfox/express-bem/releases) [![Dependency Status](https://david-dm.org/zxqfox/express-bem.png)](https://david-dm.org/zxqfox/express-bem)
+# express-bem [![Build Status](https://travis-ci.org/zxqfox/express-bem.svg)](https://travis-ci.org/zxqfox/express-bem) [![Dependency Status](https://david-dm.org/zxqfox/express-bem.png)](https://david-dm.org/zxqfox/express-bem)
 
-A [bemhtml.js][] and [bemtree.js][], etc. adapters for [express][] :palm_tree:
+[BEM][] bundles render adapter for [express][] :palm_tree:
 
 [express]: https://github.com/visionmedia/express
+[BEM]: http://bem.info/
 
 ## Why
 
