@@ -1,18 +1,22 @@
 var ASSERT = require('assert');
 
-describe('view render middlewares', function () {
+describe('view middlewares', function () {
     var env = global.expressSetup({
         path : 'test/data/views/desktop.bundles'
     });
 
-    it('should called in order they described, overload ctx, be async and generate middleware', function (done) {
+    var testingOrder = [];
+    var testingPattern = Math.random() * 10e15;
+    var testingPattern2 = Math.random() * 10e15;
 
-        var testingOrder = [],
-            testingPattern = Math.random() * 10e15;
+    before(function () {
+        env.app.bem.engine('.someext.js', function (name, options, cb) {
+            cb(null, JSON.stringify({name: this.name, data: options.data}));
+        });
 
         // should called first
         env.app.bem.use(function (ctx, next) {
-            ctx.options.bemjson.content.push(testingPattern);
+            ctx.options.data = [ctx.options.data, testingPattern];
             setTimeout(function () {
                 testingOrder.push('a');
                 next();
@@ -32,15 +36,15 @@ describe('view render middlewares', function () {
                 next();
             };
         }, {param: 'c'});
+    });
 
-        env.case(this.test.title, function (req, res) {
-            global.loadBemjson('./test/data/views/desktop.bundles/index/index.bemjson.js', function (err, bemjson) {
-                res.render('index', {bemjson : bemjson});
-            });
+    it('should called in order they described, overload ctx, be async and generate middleware', function (done) {
 
-        }, function (error, response, body) {
+        env.app.render('index', {data: testingPattern2}, function (err, body) {
+            ASSERT(!err, err);
             ASSERT.equal(JSON.stringify(testingOrder), JSON.stringify(['a', 'b', 'c']));
             ASSERT(body.indexOf(testingPattern) !== -1);
+            ASSERT(body.indexOf(testingPattern2) !== -1);
             done();
         });
 

@@ -6,8 +6,9 @@ var EXPRESS = require('express'),
     VM = require('vm'),
     U = require('../lib/util');
 
+global.EXPRESS = EXPRESS;
+global.EXPRESSBEM = EXPRESSBEM;
 global.expressSetup = expressSetup;
-global.loadBemjson = loadBemjson;
 
 function expressSetup (opts) {
     var env = {};
@@ -41,25 +42,4 @@ function expressSetup (opts) {
     }
 
     return env;
-}
-
-function loadBemjson (file, cb) {
-    U.load(file, function (err, data) {
-        if (err) {
-            cb(err);
-            return;
-        }
-
-        var sandbox = {},
-            script = 'bemjson = ' + data;
-
-        try {
-            VM.runInNewContext(script, sandbox, file + '.vm');
-        } catch (e) {
-            cb(e);
-            return;
-        }
-
-        cb(null, sandbox.bemjson);
-    });
 }

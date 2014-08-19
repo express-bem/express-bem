@@ -14,12 +14,9 @@ And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks li
 
 ## Plugins
 
-```
-// - [express-bem-bemhtml](https://github.com/zxqfox/express-bem-bemhtml)
-// - [express-bem-bemtree](https://github.com/zxqfox/express-bem-bemtree)
-```
-
-- [express-bem-tools-make](https://github.com/zxqfox/express-bem-tools-make)
+- [express-bem-bemtree](https://github.com/zxqfox/express-bem-bemtree)
+- [express-bem-bemhtml](https://github.com/zxqfox/express-bem-bemhtml)
+- [express-bem-tools-make](https://github.com/zxqfox/express-bem-tools-make) bem-tools make middleware
 
 ## Dependencies
 
@@ -27,52 +24,66 @@ And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks li
 
 [express][] v3.0+
 
-Installation
-------------
+## Installation
 
 ```sh
 $ npm i express-bem --save
 ```
 
-Usage
------
+## Usage
 
 To _load_ and _init_ module you can use this snippet:
 
 ```js
-var
-  Express = require('express'),
-  ExpressBem = require('express-bem'),
+var Express = require('express'),
+var ExpressBem = require('express-bem'),
 
-  // create app and bem
-  app = Express(),
-  bem = ExpressBem({
-    projectRoot: './path-to/bem-project', // bem project root, used for bem make only
-    path: './custom.bundles',             // path to your bundles
-    cache: false                          // to reload files each render
+// create app and bem
+app = Express(),
+bem = ExpressBem({
+  projectRoot: './path-to/bem-project', // bem project root, used for bem make only
+  path: './custom.bundles',             // path to your bundles
+  cache: false                          // to reload files each render
+});
+
+// register engines
+bem.usePlugin('bemtree'); // requires module express-bem-bemtree
+bem.usePlugin('bemhtml'); // ... express-bem-bemhtml
+
+bem.engine('.bh.js', function (name, options, cb) {
+  // some custom .bh.js realisation
+  cb(null, 'result');
+});
+
+bem.engine('fullstack', '.bem', function (name, options, cb) {
+  var view = this;
+
+  // pass options.bemjson directly to bemhtml
+  if (options.bemjson) return view.thru('bemhtml');
+
+  // return bemjson if requested
+  if (options.raw === true) return view.thru('bemtree');
+
+  // full stack
+  view.thru('bemtree', name, options, function (err, bemjson) {
+    if (err) return cb(err);
+
+    options.bemjson = bemjson;
+    view.thru('bemhtml', name, options, function (err, data) {
+      if (err) return cb(err);
+      cb(null, data);
+    });
   });
+});
 
-// and just use _all-in-one_
+// here to lookup bundles at your path you need small patch
 app.bem = bem.bindTo(app);
 ```
 
-Or detailed (see also `ExpressBem.prototype.bindTo` method)
-
-```js
-app.bem = bem;
-
-// register engines
-app.engine('bemhtml.js', bem.expressViewEngine);
-app.engine('bemtree.js', bem.expressViewEngine);
-app.engine('bem', bem.expressViewEngine);
-app.set('view engine', 'bem'); // if no extension passed in template name
-
-// here to lookup bundles at your path you need small patch
-bem.patchView(app.get('view'));
-```
+See also `ExpressBem.prototype.bindTo` method.
 
 And then just use `res.render` (or `app.render`) in your code and pass
-`bemjson` tree there
+some data (or `bemjson` tree) there:
 
 ```js
 app.get('/', function (req, res) {
@@ -92,13 +103,14 @@ Or raw data to execute `bemtree`
 ```js
 app.get('/', function (req, res) {
   res.render('your-bundle', {
-    param: 1
-  }
+    title: 'Cool story #1',
+    storyId: req.query.id,
+    story: {title: 'Cool', content: '... Lorem Ipsum ...'}
+  });
 });
 ```
 
-Directories
------------
+## Directories
 
 If you want to use your `bem` repo you can just pull it with `git` submodules
 or install as `npm` package and then just use it as your special bundles path.
@@ -120,7 +132,7 @@ or install as `npm` package and then just use it as your special bundles path.
 ```
 
 Otherwise you can import somehow `bemhtml.js` and/or `bemtree.js` files
-to your `views` path and use them with default `View.lookup`.
+to your `views` path and use them with default `View.prototype.lookup`.
 
 ```
 .
@@ -132,8 +144,155 @@ to your `views` path and use them with default `View.lookup`.
     └── layout.bemtree.js
 ```
 
-License
--------
+## Plugins, engines, middlewares
+
+### Engine
+
+Very simple async render engine
+
+```js
+/**
+ * At least one name/ext definition required in params or engine
+ * @method engine
+ * @param {String} [name] optional name of engine
+ * @param {String} [ext] optional extension of engine
+ * @param {Object|Function} engine can be function or object with render, name, extension properties
+ */
+
+// canonical
+bem.engine('even-simpler', '.espl.js', function (name, options, cb) {
+  cb(null, 'rendered result');
+});
+
+// name will be espl
+bem.engine('.espl.js', function (name, options, cb) {
+  cb(null, 'rendered result');
+});
+
+// ext will be .espl.js
+bem.engine('espl', function (name, options, cb) {
+  cb(null, 'rendered result');
+});
+
+// via function
+function evenSimpler(name, options, cb) {
+  cb(null, 'rendered result');
+}
+evenSimpler.extension = '.espl.js';
+bem.engine(evenSimpler);
+
+// via blackbox (function/object)
+bem.engine(require('express-bem-even-simpler-engine'));
+
+// via object
+bem.engine({
+  extension: '.blo.js', // name will be 'blo'
+  render: function (name, options, cb) {
+    cb(null, 'rendered result');
+  }
+});
+```
+
+You should know that you should set by self default engine if you don't use `.bindTo` method.
+
+Like that:
+
+```js
+// set first available engine as default
+app.set('view engine', bem.defaultViewEngine);
+
+// set concrete default engine
+app.set('view engine', '.espl.js');
+```
+
+### Middleware
+
+Middlewares usually calls betweed express' `View.prototype.render` and engine's `.render`.
+
+```js
+/**
+ * @method use
+ * @param {Function} middleware depends on arity it can be generator or middleware itself
+ * @param {Object} opts options passed to middlewares
+ */
+
+// using as simple middleware
+bem.use(function (ctx, next) {
+  // current view
+  var view = this;
+
+  // slow down render
+  setTimeout(next, 2000);
+});
+
+// using as generator
+bem.use(function (opts) {
+  // expressBem context
+  var bem = this;
+
+  /**
+   * @param {Object} ctx Object with name, options, cb properties that can be modified
+   * @param {Function} next done callback
+   */
+  return function (ctx, next) {
+
+    // dump current extension and passed name to render
+    console.log(this.ext, ctx.name);
+
+    // fixup context
+    ctx.options.raw = 1;
+
+    // all is fine go ahead
+    next();
+  };
+})
+```
+
+### Plugin interface
+
+It should have `engines` (`engine` if one) and/or `middlewares` (`middleware`) properties.
+
+To load plugin into `express-bem` instance just call `usePlugin` method with some parameters:
+
+```js
+/**
+ * @method usePlugin
+ * @param {String|Object|Function} plugin name, object or generator
+ * @param {Object} opts options passed to middlewares
+ */
+
+// by module require
+bem.usePlugin(require('express-bem-module-name'), { /* options */ });
+
+// by object declaration
+bem.usePlugin({
+  middleware: function (opts) { // middleware generator
+    return function (ctx, next) {
+      console.log(ctx.options);
+      next();
+    };
+  }
+}, { /* options for middleware */ });
+
+// by function generator
+bem.usePlugin(function () { // plugin generator
+  return {
+    engines: [{
+      extension: '.q.js',
+      render: function (name, options, cb) {
+        cb(null, name);
+      }
+    }, {
+      extension: '.w.js',
+      render: function (name, options, cb) {
+        cb(null, this.ext);
+      }
+    }]
+  };
+});
+```
+
+## License
 
 MIT. See also [License][]
 
