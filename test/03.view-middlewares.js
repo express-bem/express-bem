@@ -5,7 +5,7 @@ describe('view render middlewares', function () {
         path : 'test/data/views/desktop.bundles'
     });
 
-    it('should called in order they described, overload ctx and be async', function (done) {
+    it('should called in order they described, overload ctx, be async and generate middleware', function (done) {
 
         var testingOrder = [],
             testingPattern = Math.random() * 10e15;
@@ -25,13 +25,21 @@ describe('view render middlewares', function () {
             next();
         });
 
+        // should be generated and called last
+        env.app.bem.use(function (opts) {
+            return function (ctx, next) {
+                testingOrder.push(opts.param);
+                next();
+            };
+        }, {param: 'c'});
+
         env.case(this.test.title, function (req, res) {
             global.loadBemjson('./test/data/views/desktop.bundles/index/index.bemjson.js', function (err, bemjson) {
                 res.render('index', {bemjson : bemjson});
             });
 
         }, function (error, response, body) {
-            ASSERT.equal(JSON.stringify(testingOrder), JSON.stringify(['a', 'b']));
+            ASSERT.equal(JSON.stringify(testingOrder), JSON.stringify(['a', 'b', 'c']));
             ASSERT(body.indexOf(testingPattern) !== -1);
             done();
         });
