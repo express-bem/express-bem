@@ -46,9 +46,9 @@ var
   // create app and bem
   app = Express(),
   bem = ExpressBem({
-    projectRoot: '.',          // bem project root, used for bem make only
-    path: './desktop.bundles', // path to your bundles
-    cache: false               // to reload files each render
+    projectRoot: './path-to/bem-project', // bem project root, used for bem make only
+    path: './custom.bundles',             // path to your bundles
+    cache: false                          // to reload files each render
   });
 
 // and just use _all-in-one_
@@ -64,14 +64,10 @@ app.bem = bem;
 app.engine('bemhtml.js', bem.expressViewEngine);
 app.engine('bemtree.js', bem.expressViewEngine);
 app.engine('bem', bem.expressViewEngine);
-app.set('view engine', 'bem');
+app.set('view engine', 'bem'); // if no extension passed in template name
 
 // here to lookup bundles at your path you need small patch
 bem.patchView(app.get('view'));
-
-//if ('needAutoMake') { moved out to separate repo
-//  bem.use(bem.makeMiddleware({ verbosity: 'debug' }));
-//}
 ```
 
 And then just use `res.render` (or `app.render`) in your code and pass
