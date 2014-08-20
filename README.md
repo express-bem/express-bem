@@ -47,8 +47,8 @@ bem = ExpressBem({
 });
 
 // register engines
-bem.usePlugin('bemtree'); // requires module express-bem-bemtree
-bem.usePlugin('bemhtml'); // ... express-bem-bemhtml
+bem.usePlugin('express-bem-bemtree'); // requires module express-bem-bemtree
+bem.usePlugin('express-bem-bemhtml'); // ... express-bem-bemhtml
 
 bem.engine('.bh.js', function (name, options, cb) {
   // some custom .bh.js realisation
