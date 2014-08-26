@@ -35,26 +35,54 @@ $ npm i express-bem --save
 To _load_ and _init_ module you can use this snippet:
 
 ```js
-var Express = require('express'),
-var ExpressBem = require('express-bem'),
+var Express = require('express');
+var ExpressBem = require('express-bem');
 
 // create app and bem
-app = Express(),
-bem = ExpressBem({
+var app = Express();
+var bem = ExpressBem({
   projectRoot: './path-to/bem-project', // bem project root, used for bem make only
-  path: './custom.bundles',             // path to your bundles
-  cache: false                          // to reload files each render
+  path: './custom.bundles'             // path to your bundles
 });
+
+// here to lookup bundles at your path you need small patch
+app.bem = bem.bindTo(app);
 
 // register engines
 bem.usePlugin('express-bem-bemtree'); // requires module express-bem-bemtree
 bem.usePlugin('express-bem-bemhtml'); // ... express-bem-bemhtml
+```
 
+Allowed options for `cache` param object are:
+- `load` if set to `false` will reload any template files each time
+- `exec` if set to `false` will exec template files each time
+
+But also can be set to boolean.
+
+Examples:
+```js
+var bem = ExpressBem({
+  cache: {
+    load: true, // don't reload
+    exec: false // but execute with context
+  }
+});
+
+var cachingbem = ExpressBem({
+  cache: true // cache all
+});
+```
+
+Also you can add your custom engine
+```js
 bem.engine('.bh.js', function (name, options, cb) {
   // some custom .bh.js realisation
   cb(null, 'result');
 });
+```
 
+Or even more complex
+```js
 bem.engine('fullstack', '.bem', function (name, options, cb) {
   var view = this;
 
@@ -75,9 +103,6 @@ bem.engine('fullstack', '.bem', function (name, options, cb) {
     });
   });
 });
-
-// here to lookup bundles at your path you need small patch
-app.bem = bem.bindTo(app);
 ```
 
 See also `ExpressBem.prototype.bindTo` method.
