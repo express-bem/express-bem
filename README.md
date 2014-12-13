@@ -1,5 +1,5 @@
 
-# express-bem [![Build Status](https://travis-ci.org/zxqfox/express-bem.svg)](https://travis-ci.org/zxqfox/express-bem) [![Dependency Status](https://david-dm.org/zxqfox/express-bem.png)](https://david-dm.org/zxqfox/express-bem)
+# express-bem [![Build Status](https://travis-ci.org/express-bem/express-bem.svg)](https://travis-ci.org/express-bem/express-bem) [![Dependency Status](https://david-dm.org/express-bem/express-bem.png)](https://david-dm.org/express-bem/express-bem)
 
 [BEM][] bundles render adapter for [express][] :palm_tree:
 
@@ -14,9 +14,9 @@ And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks li
 
 ## Plugins
 
-- [express-bem-bemtree](https://github.com/zxqfox/express-bem-bemtree)
-- [express-bem-bemhtml](https://github.com/zxqfox/express-bem-bemhtml)
-- [express-bem-tools-make](https://github.com/zxqfox/express-bem-tools-make) bem-tools make middleware
+- [express-bem-bemtree](https://github.com/express-bem/bemtree)
+- [express-bem-bemhtml](https://github.com/express-bem/bemhtml)
+- [express-bem-tools-make](https://github.com/express-bem/tools-make) bem-tools make middleware
 
 ## Dependencies
 
@@ -212,6 +212,7 @@ bem.engine(require('express-bem-even-simpler-engine'));
 // via object
 bem.engine({
   extension: '.blo.js', // name will be 'blo'
+  targetExtensions: ['.blo.js'],
   render: function (name, options, cb) {
     cb(null, 'rendered result');
   }
@@ -321,4 +322,4 @@ bem.usePlugin(function () { // plugin generator
 
 MIT. See also [License][]
 
-[License]: https://github.com/zxqfox/express-bem/blob/master/LICENSE
+[License]: https://github.com/express-bem/express-bem/blob/master/LICENSE
