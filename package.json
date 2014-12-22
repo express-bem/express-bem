@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "jshint lib test && jscs lib test",
     "test": "npm run lint && mocha",
+    "travis": "mocha",
     "changelog": "git log `git describe --tags --abbrev=0`..HEAD --pretty=format:' * %s (%an)' | grep -v 'Merge pull request'"
   },
   "repository": {
