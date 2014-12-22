@@ -83,7 +83,7 @@ bem.engine('.bh.js', function (name, options, cb) {
 
 Or even more complex
 ```js
-bem.engine('fullstack', '.bem', function (name, options, cb) {
+bem.engine('fullstack', '.bem', ['.bemhtml.js', '.bemtree.js'], function (name, options, cb) {
   var view = this;
 
   // pass options.bemjson directly to bemhtml

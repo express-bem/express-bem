@@ -75,6 +75,21 @@ describe('view engine', function () {
         });
     });
 
+    describe('late initialized engine with several targets', function () {
+        beforeEach(function () {
+            bem.bindTo(app);
+            bem.engine('testing', '.testing', ['.testing1', '.testing2'], simpleEngine);
+        });
+
+        it('should render data correctly', function (done) {
+            app.render('index.testing', {data: data}, function (err, html) {
+                ASSERT(!err, err);
+                ASSERT(html, testResult);
+                done();
+            });
+        });
+    });
+
     function simpleEngine (name, options, cb) {
         cb(null, JSON.stringify({
             ext        : this.ext,
