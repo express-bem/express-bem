@@ -93,11 +93,11 @@ bem.engine('fullstack', '.bem', ['.bemhtml.js', '.bemtree.js'], function (name, 
   if (options.raw === true) return view.thru('bemtree');
 
   // full stack
-  view.thru('bemtree', name, options, function (err, bemjson) {
+  view.thru('bemtreeEngine', name, options, function (err, bemjson) {
     if (err) return cb(err);
 
     options.bemjson = bemjson;
-    view.thru('bemhtml', name, options, function (err, data) {
+    view.thru('bemhtmlEngine', name, options, function (err, data) {
       if (err) return cb(err);
       cb(null, data);
     });
