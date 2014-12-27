@@ -16,7 +16,9 @@ And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks li
 
 - [express-bem-bemtree](https://github.com/express-bem/bemtree)
 - [express-bem-bemhtml](https://github.com/express-bem/bemhtml)
+- [express-bem-bh](https://github.com/express-bem/bh)
 - [express-bem-tools-make](https://github.com/express-bem/tools-make) bem-tools make middleware
+- [express-bem-enb-make](https://github.com/express-bem/enb-make) enb make middleware
 
 ## Dependencies
 
@@ -81,7 +83,7 @@ bem.engine('.bh.js', function (name, options, cb) {
 });
 ```
 
-Or even more complex
+Or even more complex (call this before loading plugins or set default engine by self):
 ```js
 bem.engine('fullstack', '.bem', ['.bemhtml.js', '.bemtree.js'], function (name, options, cb) {
   var view = this;
@@ -93,11 +95,11 @@ bem.engine('fullstack', '.bem', ['.bemhtml.js', '.bemtree.js'], function (name, 
   if (options.raw === true) return view.thru('bemtree');
 
   // full stack
-  view.thru('bemtreeEngine', name, options, function (err, bemjson) {
+  view.thru('bemtree', name, options, function (err, bemjson) {
     if (err) return cb(err);
 
     options.bemjson = bemjson;
-    view.thru('bemhtmlEngine', name, options, function (err, data) {
+    view.thru('bemhtml', name, options, function (err, data) {
       if (err) return cb(err);
       cb(null, data);
     });
@@ -219,7 +221,7 @@ bem.engine({
 });
 ```
 
-You should know that you should set by self default engine if you don't use `.bindTo` method.
+You should know that you should set by self default engine if you don't use `.bindTo` method. Default engine is the first declared engine.
 
 Like that:
 
