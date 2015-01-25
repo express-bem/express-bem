@@ -26,6 +26,23 @@ And now it's just a `npm i express-bem` and 3 lines of code to use bem blocks li
 
 [express][] v3.0+
 
+## TL;DR
+
+Quick start guide. Run it in your shell:
+```sh
+git clone https://github.com/express-bem/project-stub.git ./express-bem-project-stub
+cd express-bem-project-stub
+npm install
+PORT=3030 node app.js
+```
+
+And after start:
+```
+open http://localhost:3030/
+```
+
+Look closer at stub: https://github.com/express-bem/project-stub
+
 ## Installation
 
 ```sh
