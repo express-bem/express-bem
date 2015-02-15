@@ -28,18 +28,18 @@
   },
   "homepage": "https://github.com/zxqfox/express-bem",
   "dependencies": {
-    "lodash.assign": "^2.4.1",
-    "vow": "^0.4.5"
+    "lodash.assign": "^3.0.0",
+    "vow": "^0.4.8"
   },
   "peerDependencies": {
     "express": ">= 3.0.x"
   },
   "devDependencies": {
-    "express": "4.8.x",
-    "jscs": "^1.5.8",
-    "jshint": "^2.5.2",
-    "mocha": ">=1.20.1",
-    "request": "^2.37.0"
+    "express": "4.11.x",
+    "jscs": "^1.11.3",
+    "jshint": "^2.6.0",
+    "mocha": ">=2.1.0",
+    "request": "^2.53.0"
   },
   "files": [
     "lib",
