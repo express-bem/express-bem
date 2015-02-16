@@ -16,7 +16,7 @@ describe('init-env', function () {
 
     describe('in different environments', function () {
         it('should not initialize caching by default', function () {
-            envCase({}, false, false);
+            envCase(undefined, false, false);
         });
 
         it('should initialize env=production with full caching', function () {
@@ -40,12 +40,39 @@ describe('init-env', function () {
         it('EXPRESS_BEM_CACHE=YES expects full caching', function () {
             envCase({processEnv: {EXPRESS_BEM_CACHE: 'YES'}}, true, true);
         });
+
+        it('EXPRESS_BEM_CACHE_LOAD=YES expects load caching', function () {
+            envCase({processEnv: {EXPRESS_BEM_CACHE_LOAD: 'YES'}}, true, false);
+        });
+
+        it('EXPRESS_BEM_CACHE_EXEC=NO expects no load cache', function () {
+            envCase({processEnv: {EXPRESS_BEM_CACHE_EXEC: 'YES'}}, false, true);
+        });
+
+        it('NODE_ENV=production and EXPRESS_BEM_CACHE_LOAD=YES expects full caching', function () {
+            envCase({processEnv: {NODE_ENV: 'production', EXPRESS_BEM_CACHE_LOAD: 'NO'}}, false, true);
+        });
+
+        it('NODE_ENV=production and EXPRESS_BEM_CACHE_EXEC=YES expects full caching', function () {
+            envCase({processEnv: {NODE_ENV: 'production', EXPRESS_BEM_CACHE_EXEC: 'NO'}}, true, false);
+        });
+    });
+
+    describe('with both env and opts', function () {
+        it('should use opts instead of env', function () {
+            envCase({cache: {load: true}, processEnv: {EXPRESS_BEM_CACHE_LOAD: 'NO'}}, true, false);
+            envCase({cache: {load: false}, processEnv: {EXPRESS_BEM_CACHE_LOAD: 'YES'}}, false, false);
+            envCase({cache: {exec: true}, processEnv: {EXPRESS_BEM_CACHE_EXEC: 'NO'}}, false, true);
+            envCase({cache: {exec: false}, processEnv: {EXPRESS_BEM_CACHE_EXEC: 'YES'}}, false, false);
+        });
     });
 
     function envCase (opts, load, exec) {
         var origProcessEnv = process.env;
-        process.env = opts.processEnv || {};
-        delete opts.processEnv;
+        process.env = (opts || {}).processEnv || {};
+        if (opts && opts.processEnv) {
+            delete opts.processEnv;
+        }
 
         var expressBem = EXPRESSBEM(opts);
 

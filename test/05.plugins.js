@@ -43,6 +43,15 @@ describe('plugins', function () {
                 done();
             });
         });
+
+        it('should throw if plugin is empty', function () {
+            var app, bem;
+            app = global.EXPRESS();
+            bem = global.EXPRESSBEM({}).bindTo(app);
+            ASSERT.throws(function () {
+                bem.usePlugin({});
+            }, Error);
+        });
     });
 
     describe('loading by string', function () {
@@ -78,7 +87,28 @@ describe('plugins', function () {
                 done();
             });
         });
+    });
 
+    describe('loading by generator', function () {
+        it('should load simple', function (done) {
+            var app, bem;
+            app = global.EXPRESS();
+            bem = global.EXPRESSBEM({root : 'test/data/views'}).bindTo(app);
+            bem.usePlugin(function () {
+                return {
+                    engines : [{
+                        extension : simpleEngine.extension,
+                        render    : simpleEngine
+                    }]
+                };
+            });
+
+            app.render('index', {content: testingPattern}, function (err, body) {
+                ASSERT(!err, err);
+                ASSERT.equal(body, testingPattern);
+                done();
+            });
+        });
     });
 
     // simple engine

@@ -66,6 +66,7 @@ describe('util', function () {
         beforeEach(function () {
             var fs = {};
             fs[file] = fileContent;
+            fs['index.php'] = '<?php\necho 1;\n';
             mock(fs);
         });
 
@@ -80,11 +81,11 @@ describe('util', function () {
         });
 
         it('should exec file stored in cache', function (done) {
-            U.load({file: file, force: true}, function (err, ctx) {
+            U.exec({file: file, force: true, ctx: {a : 1}}, function (err, ctx) {
                 if (err) { return done(err); }
                 fs.writeFile(file, 'apply = function () { return "x"; };', function (err) {
                     if (err) { return done(err); }
-                    U.exec({file: file}, function (err, ctx) {
+                    U.exec({file: file, ctx: {a : 1}}, function (err, ctx) {
                         if (err) { return done(err); }
                         ASSERT.equal(ctx.apply('x'), '"x"');
                         done();
@@ -94,7 +95,7 @@ describe('util', function () {
         });
 
         it('should reload and reexec file in cache', function (done) {
-            U.load({file: file}, function (err, ctx) {
+            U.exec({file: file}, function (err, ctx) {
                 if (err) { return done(err); }
                 fs.writeFile(file, 'apply = function () { return "y"; };', function (err) {
                     if (err) { return done(err); }
@@ -104,6 +105,22 @@ describe('util', function () {
                         done();
                     });
                 });
+            });
+        });
+
+        // edge cases
+
+        it('should fail if file does not exists', function (done) {
+            U.exec('non-existance', function (err) {
+                ASSERT(err);
+                done();
+            });
+        });
+
+        it('should fail if file is not executable', function (done) {
+            U.exec('index.php', function (err) {
+                ASSERT(err);
+                done();
             });
         });
     });

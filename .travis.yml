@@ -3,10 +3,22 @@ sudo: false
 
 node_js:
   - "0.10"
-  - "0.11"
+  - "0.12"
+  - "1.2"
+
+env:
+  global:
+    - GH_REF: github.com/express-bem/express-bem.git
+    - ISTANBUL_COVERAGE: yes
 
 before_script:
   - if [ "$TRAVIS_NODE_VERSION" == "0.10" ]; then npm run lint; fi
 
 script:
   - npm run travis
+
+after_success:
+  - if [ "$TRAVIS_NODE_VERSION" == "0.10" ]; then
+      npm i coveralls;
+      cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && echo "Coverage data was sent to coveralls!";
+    fi

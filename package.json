@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "jshint lib test && jscs lib test",
     "test": "npm run lint && mocha",
-    "travis": "mocha",
+    "travis": "istanbul cover _mocha",
     "changelog": "git log `git describe --tags --abbrev=0`..HEAD --pretty=format:' * %s (%an)' | grep -v 'Merge pull request'"
   },
   "repository": {
@@ -32,10 +32,11 @@
     "vow": "^0.4.8"
   },
   "peerDependencies": {
-    "express": ">= 3.0.x"
+    "express": ">= 3.0.0"
   },
   "devDependencies": {
     "express": "4.11.x",
+    "istanbul": "^0.3.5",
     "jscs": "^1.11.3",
     "jshint": "^2.6.0",
     "mocha": ">=2.1.0",

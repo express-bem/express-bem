@@ -1,5 +1,8 @@
 
-# express-bem [![Build Status](https://travis-ci.org/express-bem/express-bem.svg)](https://travis-ci.org/express-bem/express-bem) [![Dependency Status](https://david-dm.org/express-bem/express-bem.png)](https://david-dm.org/express-bem/express-bem)
+# express-bem
+[![Build Status](https://travis-ci.org/express-bem/express-bem.svg)](https://travis-ci.org/express-bem/express-bem)
+[![Coverage Status](https://coveralls.io/repos/express-bem/express-bem/badge.svg)](https://coveralls.io/r/express-bem/express-bem)
+[![Dependency Status](https://david-dm.org/express-bem/express-bem.svg)](https://david-dm.org/express-bem/express-bem)
 
 [BEM][] bundles render adapter for [express][] :palm_tree:
 

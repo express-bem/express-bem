@@ -31,7 +31,7 @@ describe('view engine', function () {
             bem.engine('.testing2', function (name, options, cb) {
                 cb(null, 'testing2-result');
             });
-            bem.engine('.testing3', function (name, options, cb) {
+            bem.engine('testing3', function (name, options, cb) {
                 cb(null, 'testing3-result');
             });
             app.set('view engine', '.testing2');
@@ -64,6 +64,7 @@ describe('view engine', function () {
         beforeEach(function () {
             bem.bindTo(app);
             bem.engine(simpleEngine);
+            bem.engine(simpleUndottedEngine);
         });
 
         it('should render data correctly', function (done) {
@@ -90,6 +91,24 @@ describe('view engine', function () {
         });
     });
 
+    describe('declared with object', function () {
+        beforeEach(function () {
+            bem.bindTo(app);
+            bem.engine({
+                name   : 'testing',
+                engine : simpleEngine
+            });
+        });
+
+        it('should render data correctly', function (done) {
+            app.render('index.testing', {data: data}, function (err, html) {
+                ASSERT(!err, err);
+                ASSERT(html, testResult);
+                done();
+            });
+        });
+    });
+
     function simpleEngine (name, options, cb) {
         cb(null, JSON.stringify({
             ext        : this.ext,
@@ -99,4 +118,6 @@ describe('view engine', function () {
     }
     simpleEngine.extension = '.testing';
 
+    function simpleUndottedEngine () { return simpleEngine.apply(this, arguments); }
+    simpleUndottedEngine.extension = 'undotted';
 });

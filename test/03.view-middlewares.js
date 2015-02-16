@@ -14,7 +14,11 @@ describe('view middlewares', function () {
             cb(null, JSON.stringify({name: this.name, data: options.data}));
         });
 
-        // should called first
+        env.app.bem.engine('.xxx.js', function (name, options, cb) {
+            this.thru('.unknown');
+        });
+
+        // should be called first
         env.app.bem.use(function (ctx, next) {
             ctx.options.data = [ctx.options.data, testingPattern];
             setTimeout(function () {
@@ -23,9 +27,15 @@ describe('view middlewares', function () {
             }, 20);
         });
 
-        // should called next
-        env.app.bem.use(function (ctx, next) {
+        // should be called next
+        env.app.bem.use(null, function (ctx, next) {
             testingOrder.push('b');
+            next();
+        });
+
+        // should not be called next
+        env.app.bem.use('x', function (ctx, next) {
+            testingOrder.push('X');
             next();
         });
 
@@ -45,6 +55,16 @@ describe('view middlewares', function () {
             ASSERT.equal(JSON.stringify(testingOrder), JSON.stringify(['a', 'b', 'c']));
             ASSERT(body.indexOf(testingPattern) !== -1);
             ASSERT(body.indexOf(testingPattern2) !== -1);
+            done();
+        });
+
+    });
+
+    it('should throw unknown engines', function (done) {
+
+        env.app.render('index.xxx.js', {}, function (err, body) {
+            ASSERT(err);
+            ASSERT.equal(String(err), 'Error: Unknown engine .unknown');
             done();
         });
 
