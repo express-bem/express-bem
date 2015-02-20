@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zxqfox/express-bem.git"
+    "url": "https://github.com/express-bem/express-bem.git"
   },
   "keywords": [
     "express",
@@ -24,15 +24,12 @@
   "author": "Alexej Yaroshevich <zxqfox@gmail.com> (http://github.com/zxqfox)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zxqfox/express-bem/issues"
+    "url": "https://github.com/express-bem/express-bem/issues"
   },
-  "homepage": "https://github.com/zxqfox/express-bem",
+  "homepage": "https://github.com/express-bem/express-bem",
   "dependencies": {
     "lodash.assign": "^3.0.0",
     "vow": "^0.4.8"
-  },
-  "peerDependencies": {
-    "express": ">= 3.0.0"
   },
   "devDependencies": {
     "express": "4.11.x",
