@@ -1,6 +1,6 @@
 {
   "name": "express-bem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "bem bundles renderer for express",
   "main": "lib/index.js",
   "scripts": {
