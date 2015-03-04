@@ -29,7 +29,8 @@
   "homepage": "https://github.com/express-bem/express-bem",
   "dependencies": {
     "lodash.assign": "^3.0.0",
-    "vow": "^0.4.8"
+    "vow": "^0.4.8",
+    "express": ">=3"
   },
   "devDependencies": {
     "express": "4.11.x",
