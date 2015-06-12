@@ -140,8 +140,12 @@ describe('util', function () {
             ASSERT.equal(U.fulfillName('bundles/index', '.js'), 'bundles/index/index.js');
         });
 
-        it('should fulfill name with source mask', function () {
+        it('should fulfill name with source mask, which masks name', function () {
             ASSERT.equal(U.fulfillName('index', 'js', '?.min.js'), 'index/index.min.js');
+        });
+
+        it('should fulfill name with source mask, which masks both name and lang', function () {
+            ASSERT.equal(U.fulfillName('index', 'js', '?.{lang}.min.js', 'en'), 'index/index.en.min.js');
         });
     });
 
@@ -152,6 +156,10 @@ describe('util', function () {
 
         it('should unmask name', function () {
             ASSERT.equal(U.unmaskName('index', '?.min.js'), 'index.min.js');
+        });
+
+        it('should unmask lang', function () {
+            ASSERT.equal(U.unmaskName('index', '{lang}.min.js', 'en'), 'en.min.js');
         });
     });
 
