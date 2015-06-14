@@ -140,12 +140,45 @@ describe('util', function () {
             ASSERT.equal(U.fulfillName('bundles/index', '.js'), 'bundles/index/index.js');
         });
 
-        it('should fulfill name with source mask, which masks name', function () {
+        it('should fulfill name with source mask, when masked name', function () {
             ASSERT.equal(U.fulfillName('index', 'js', '?.min.js'), 'index/index.min.js');
         });
 
-        it('should fulfill name with source mask, which masks both name and lang', function () {
+        it('should fulfill name with source mask, when masked both name and lang', function () {
             ASSERT.equal(U.fulfillName('index', 'js', '?.{lang}.min.js', 'en'), 'index/index.en.min.js');
+        });
+
+        describe('support options passed as a hash', function () {
+            it('should fulfill name with ext', function () {
+                ASSERT.equal(U.fulfillName({
+                    name : 'bundles/index',
+                    ext  : 'js',
+                }), 'bundles/index/index.js');
+            });
+
+            it('should fulfill name with dotted ext', function () {
+                ASSERT.equal(U.fulfillName({
+                    name : 'bundles/index',
+                    ext  : '.js'
+                }), 'bundles/index/index.js');
+            });
+
+            it('should fulfill name with source mask, when masked name', function () {
+                ASSERT.equal(U.fulfillName({
+                    name : 'index',
+                    ext  : 'js',
+                    mask : '?.min.js'
+                }), 'index/index.min.js');
+            });
+
+            it('should fulfill name with source mask, when masked both name and lang', function () {
+                ASSERT.equal(U.fulfillName({
+                    name : 'index',
+                    ext  : 'js',
+                    mask : '?.{lang}.min.js',
+                    lang : 'en'
+                }), 'index/index.en.min.js');
+            });
         });
     });
 
